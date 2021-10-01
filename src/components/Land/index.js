@@ -1,82 +1,101 @@
-import React, { useEffect, useRef, useState } from "react";
-import { FlatList, SafeAreaView, Text, View,StyleSheet, Dimensions, PixelRatio } from "react-native";
-import { FAB } from "react-native-paper";
-import { useDispatch, useSelector } from "react-redux";
-import { typeOfArticles } from "../../config/apis";
-import CardToShowContent from "../../presentational/CardToShowContent";
-import { GET_FEATURED_POST_ACTION, GET_RECENT_POST_ACTION, GET_RELEVANT_POST_ACTION } from "../../redux/action-type";
-import { getFeaturedPostAction } from "../../redux/action/getFeaturedPostAction";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import React, { useState } from "react";
+import { SafeAreaView, StyleSheet, useWindowDimensions } from "react-native";
+import { ActivityIndicator, IconButton } from "react-native-paper";
 
-const {height} = Dimensions.get('window');
-const {width} = Dimensions.get('window');
+import Featured from "../FeaturedPost";
+import Recent from "../Recent";
+import Relevant from "../Relevant";
 
-const Land = ({navigation})=>{
-   const dispatch = useDispatch();
-    const [pageCount,setPageCount]= useState(1);
-    const [endRached,setEndReached] = useState(false);
-   const posts = useSelector(state=>state.featuredPost.featuredPosts);
 
-   function handleReachEnd() {
-     setEndReached(true);
-    getFeaturedPostAction(GET_FEATURED_POST_ACTION,typeOfArticles.featured)(dispatch,pageCount+1);
-    setPageCount(pageCount+1);
-   }
+const LazyPlaceHolder = () => {
+  return (
+    <ActivityIndicator size={'large'} />
+  );
+}
 
-   const flatList = useRef();
-  useEffect(()=>{
-    getFeaturedPostAction(GET_FEATURED_POST_ACTION,typeOfArticles.featured)(dispatch,0);
-  },[]);
 
-    return(
-       <SafeAreaView style={styles.container}>
-           <FlatList
-           ref={flatList}
-           extraData={posts}
-           contentContainerStyle={styles.flatListStyle}
-           data={posts}
-           renderItem={({item})=>{
-             return(
-            <CardToShowContent
-            navigation={navigation}
-             val={item}/>
-           )}}
-            keyExtractor={item=>item.cuid}
-            onEndReached={handleReachEnd}
-            onEndReachedThreshold={10}
-           />
-           {
-             endRached ?
-             <FAB
-           small
-           icon={"plus"}
-           onPress={()=>flatList.current.scrollToIndex({
-             index:0,
-             animated:true
-           })}
-           style={styles.fab}
-           />:
-           <></>
-           }
+// const renderScene = SceneMap({
+//   featured: Featured,
+//   recent: Recent,
+//   relavent: Relevant,
 
-       </SafeAreaView>
-    );
+// });
+
+
+
+const Land = ({ navigation }) => {
+
+  // //  different post fetching
+
+  //  const recentPosts = useSelector(state=>state.featuredPost.recentPosts);
+  //  const relaventPosts = useSelector(state=>state.featuredPost.relaventPosts);
+
+  // const [index, setIndex] = useState(0);
+  // const [routes] = useState([
+  //   { key: 'featured', title: 'Featured', navigation: navigation },
+  //   { key: 'recent', title: 'Recent', navigation: navigation },
+  //   { key: 'relavent', title: 'Relavent', navigation: navigation }
+  // ]);
+
+  const { width } = useWindowDimensions();
+  const Tab = createMaterialTopTabNavigator();
+  return (
+    <SafeAreaView style={styles.container}>
+      <Tab.Navigator
+
+      screenOptions={{
+        tabBarItemStyle:{
+          flexDirection:'row'
+        },
+        tabBarLabelStyle:{
+          textTransform:'none',
+           marginTop: 30,
+           marginLeft: 15,
+           fontSize: 15,
+        },
+        lazy: true,
+        lazyPlaceholder:LazyPlaceHolder
+      }}
+      >
+        <Tab.Screen
+        name="featured"
+        component={Featured}
+        options={{
+          tabBarShowIcon:true,
+          tabBarIcon:()=>{
+            return <IconButton icon="star-face"/>
+          },
+        }}
+         />
+        <Tab.Screen
+         options={{
+          tabBarShowIcon:true,
+          tabBarIcon:()=>{
+            return <IconButton icon="feather"/>
+          },
+        }}
+        title={'Relevant'}
+         name="Relevant" component={Relevant} />
+        <Tab.Screen
+         options={{
+          tabBarShowIcon:true,
+          tabBarIcon:()=>{
+            return <IconButton icon="clock-outline"/>
+          },
+        }}
+        name="Recent" component={Recent} />
+      </Tab.Navigator>
+    </SafeAreaView>
+  );
 }
 export default Land;
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
+  container: {
+    flex: 1,
     backgroundColor: 'white'
 
   },
-  flatListStyle:{
-    paddingHorizontal:PixelRatio.roundToNearestPixel((width *4)/100),
-    paddingVertical: PixelRatio.roundToNearestPixel((height *4)/100),
-  },
-  fab:{
-    position: 'absolute',
-    margin: 16,
-    right: 0,
-    bottom: 0,
-  }
+
 });

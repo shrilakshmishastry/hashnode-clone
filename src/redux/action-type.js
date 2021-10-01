@@ -7,6 +7,7 @@ export function createActionType(type) {
     return{
         initial: type,
         success: `${type}__SUCCESS`,
-        failure: `${type}_FAILURE`
+        failure: `${type}_FAILURE`,
+        flush: `${type} _FLUSH`
     };
 }

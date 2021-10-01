@@ -13,7 +13,7 @@ const relaventPost = createActionType(GET_RELEVANT_POST_ACTION);
 
 
 export default function featured(state = initialState,action) {
-    console.log(action);
+
     switch(action.type){
         case(featuredPost.initial):{
             const newPost = {...state};
@@ -23,13 +23,23 @@ export default function featured(state = initialState,action) {
         case(featuredPost.success):{
             const newPost = {...state};
             newPost.loading = false;
-            newPost.featuredPosts = [...state.featuredPosts,...action.payload.data]
+            let featuredPost =
+            state.featuredPosts.length >0 ? action.payload.data.filter((item,index) => {
 
+                return state.featuredPosts[index].cuid != item.cuid
+            })
+            : [...action.payload.data];
+            newPost.featuredPosts = [...state.featuredPosts,...featuredPost];
             return newPost;
         }
         case(featuredPost.failure):{
             const newPost = {...state};
             newPost.loading = false;
+            return newPost;
+        }
+        case(featuredPost.flush):{
+            const newPost = {...state};
+            newPost.featuredPosts =[];
             return newPost;
         }
         case(recentPost.initial):{
@@ -41,14 +51,24 @@ export default function featured(state = initialState,action) {
 
             const newPost = {...state};
             newPost.loading = false;
+            let recentPost = state.recentPosts.length >0 ? action.payload.data.filter((item,index) => {
 
-            newPost.recentPosts = [...state.recentPosts,...action.payload.data]
+                return state.recentPosts[index].cuid != item.cuid
+            })
+            : [...action.payload.data];
+
+            newPost.recentPosts = [...state.recentPosts,...recentPost];
 
             return newPost;
         }
-        case(featuredPost.failure):{
+        case(recentPost.failure):{
             const newPost = {...state};
             newPost.loading = false;
+            return newPost;
+        }
+        case(recentPost.flush):{
+            const newPost = {...state};
+            newPost.recentPosts =[];
             return newPost;
         }
         case(relaventPost.initial):{
@@ -57,16 +77,25 @@ export default function featured(state = initialState,action) {
             return newPost;
         }
         case(relaventPost.success):{
-
             const newPost = {...state};
             newPost.loading = false;
-            newPost.relaventPosts = [...state.relaventPosts,...action.payload.data]
-            console.log(newPost.relaventPosts);
+            let relaventPost =  state.relaventPosts.length >0 ? action.payload.data.filter((item,index) => {
+
+                return state.relaventPosts[index].cuid != item.cuid
+            })
+            : [...action.payload.data];
+            newPost.relaventPosts = [...state.relaventPosts,...relaventPost];
+
             return newPost;
         }
         case(relaventPost.failure):{
             const newPost = {...state};
             newPost.loading = false;
+            return newPost;
+        }
+        case(relaventPost.flush):{
+            const newPost = {...state};
+            newPost.relaventPosts =[];
             return newPost;
         }
 

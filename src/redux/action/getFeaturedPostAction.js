@@ -25,6 +25,18 @@ function getFeaturedPostAction(type,feedtype) {
 
     }
 }
+
+function flushData(type) {
+    const {flush} = createActionType(type);
+    console.log(flush)
+    return function(dispatch) {
+        dispatch({
+            type:flush,
+        });
+    }
+}
+
 export {
-    getFeaturedPostAction
+    getFeaturedPostAction,
+    flushData
 };

@@ -3,6 +3,7 @@ import { Text, View, Image } from "react-native";
 import { Button, Card, IconButton, Paragraph, Title } from "react-native-paper";
 import LeftContent from "../../components/Land/leftContent";
 import { api } from "../../config/apis";
+import mainStyle from "../../config/mainStyle";
 import styles from "./style";
 
 
@@ -18,12 +19,12 @@ const CardToShowContent = ({ val,navigation }) => {
         cuid
     } = val;
     const date = Date(dateAdded).split(" ").splice(0, 4).join(" ");
+
     return (
         <Card
-            elevation={4}
+            elevation={2}
             mode={'elevated'}
             onPress={() => {
-                console.log("pressed");
                 navigation.navigate("webView",{
                     url: `${api.webViewUrl}${slug}-${cuid}`
                 })
@@ -32,7 +33,7 @@ const CardToShowContent = ({ val,navigation }) => {
         >
             <View style={styles.cardTitle}>
                 {
-                    author.photo
+                  author &&  author.photo
                         ?
                         <LeftContent
                             url={author.photo}
@@ -45,39 +46,55 @@ const CardToShowContent = ({ val,navigation }) => {
 
                 <View style={styles.viewNameBinder}>
                     <Text
-                    style={{
+                    style={[
+                        mainStyle.textMd,
+                        {
                         fontWeight: 'bold'
-                    }}
+                    }]}
                         accessibilityLabel={author.name}
 
                     >
                         {author.name}
                     </Text>
-                    <Text accessibilityLabel={`article published on ${date}`}>
+                    <Text
+                    style={[
+                        mainStyle.textsm,
+                        mainStyle.secondaryColor
+                    ]}
+                    accessibilityLabel={`article published on ${date}`}>
                         {date}
                     </Text>
                 </View>
             </View>
             <Card.Content>
-                <Title>
+                <Text style={[
+                    mainStyle.textLg,
+                   styles.textTitle
+                ]}>
                     {title}
-                </Title>
+                </Text>
                 <Text
+                style={[
+                    mainStyle.secondaryColor,
+                    mainStyle.textsm
+                ]}
                     numberOfLines={3}
                     ellipsizeMode={'tail'}
                 >
                     {brief}
                 </Text>
             </Card.Content>
+
             {
                 coverImage !== "" && coverImage !== null ?
                     <Image
                         source={{ uri: coverImage }}
                         style={styles.img}
                         resizeMode={'contain'}
+
                     /> :
-                    <View></View>
-            }
+                    <></>
+            } 
             <View style={styles.footer}>
                 <View style={styles.iconsBinder}>
                     <IconButton
@@ -89,7 +106,7 @@ const CardToShowContent = ({ val,navigation }) => {
                 </View>
                 <View style={styles.iconsBinder}>
                     <IconButton
-                        icon="hand-okay"
+                        icon="heart-outline"
                     />
                     <Text style={styles.textWithIcon}>
                         {totalReactions}

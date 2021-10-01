@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator  } from "@react-navigation/stack";
 import Land from '../../components/Land';
 import WebViewHandler from '../../components/WebViewHandler';
+import Featured from '../../components/FeaturedPost';
 
 const Stack = createStackNavigator();
 const StackTab = () =>{
@@ -19,6 +20,7 @@ const StackTab = () =>{
                title:""
            }}
             component={WebViewHandler}/>
+           
        </Stack.Navigator>
     );
 }
