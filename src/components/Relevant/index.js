@@ -12,7 +12,7 @@ const Relevant= ({navigation}) =>{
 
     const [relaventPageCount,setRelaventPageCount]= useState(1);
     const relaventPosts = useSelector(state=>state.featuredPost.relaventPosts);
-    const load = useSelector((state)=>state.featuredPost.loading);
+    // const load = useSelector((state)=>state.featuredPost.loading);
     const [refreshing,setResfreshing] = useState(false);
     const flatList = useRef();
     const dispatch = useDispatch();
@@ -26,11 +26,12 @@ const Relevant= ({navigation}) =>{
         setRelaventPageCount(relaventPageCount+1)
       }
 
-      const onRefresh = useCallback(()=>{
+      const onRefresh = useCallback(async()=>{
         setResfreshing(true);
         flushData(GET_RELEVANT_POST_ACTION)(dispatch);
-        getFeaturedPostAction(GET_RELEVANT_POST_ACTION,typeOfArticles.relavent)(dispatch, 0);
-        if(!load){
+        setRelaventPageCount(0);
+        const load = await getFeaturedPostAction(GET_RELEVANT_POST_ACTION,typeOfArticles.relavent)(dispatch, 0);
+        if(load){
             setResfreshing(false);
         }
 

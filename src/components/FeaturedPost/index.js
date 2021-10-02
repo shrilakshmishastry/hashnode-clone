@@ -16,18 +16,20 @@ const Featured = ({ navigation }) => {
 
     const flatList = useRef();
     const dispatch = useDispatch();
-    const load = useSelector((state)=>state.featuredPost.loading);
+    // const load = useSelector((state)=>state.featuredPost.loading);
 
 
     useEffect(() => {
         getFeaturedPostAction(GET_FEATURED_POST_ACTION, typeOfArticles.featured)(dispatch, 0);
     }, []);
 
-    const onRefresh = useCallback(()=>{
+    const onRefresh = useCallback(async()=>{
         setResfreshing(true);
+        setFeaturedPageCount(0);
         flushData(GET_FEATURED_POST_ACTION)(dispatch);
-        getFeaturedPostAction(GET_FEATURED_POST_ACTION, typeOfArticles.featured)(dispatch, 0);
-        if(!load){
+        const load = await getFeaturedPostAction(GET_FEATURED_POST_ACTION, typeOfArticles.featured)(dispatch, 0);
+
+        if(load){
             setResfreshing(false);
         }
 

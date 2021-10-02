@@ -39,6 +39,7 @@ export default function featured(state = initialState,action) {
         }
         case(featuredPost.flush):{
             const newPost = {...state};
+            newPost.loading = true;
             newPost.featuredPosts =[];
             return newPost;
         }
@@ -68,6 +69,7 @@ export default function featured(state = initialState,action) {
         }
         case(recentPost.flush):{
             const newPost = {...state};
+            newPost.loading = true;
             newPost.recentPosts =[];
             return newPost;
         }
@@ -95,6 +97,7 @@ export default function featured(state = initialState,action) {
         }
         case(relaventPost.flush):{
             const newPost = {...state};
+            newPost.loading = true;
             newPost.relaventPosts =[];
             return newPost;
         }

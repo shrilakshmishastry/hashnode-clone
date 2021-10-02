@@ -10,7 +10,7 @@ import ItemRender from '../Land/itemRender';
 const Recent= ({navigation  }) =>{
     const [recentPageCount,setRecentPageCount]= useState(1);
     const recentPosts = useSelector(state=>state.featuredPost.recentPosts);
-    const load = useSelector((state)=>state.featuredPost.loading);
+    // const load = useSelector((state)=>state.featuredPost.loading);
     const [refreshing,setResfreshing] = useState(false);
     const flatList = useRef();
     const dispatch = useDispatch();
@@ -24,11 +24,15 @@ const Recent= ({navigation  }) =>{
         setRecentPageCount(recentPageCount+1)
       }
 
-      const onRefresh = useCallback(()=>{
+      const onRefresh = useCallback(async()=>{
         setResfreshing(true);
+        setRecentPageCount(0);
         flushData(GET_RECENT_POST_ACTION)(dispatch);
-        getFeaturedPostAction(GET_RECENT_POST_ACTION, typeOfArticles.recent)(dispatch, 0);
-        if(!load){
+      const load = await  getFeaturedPostAction(GET_RECENT_POST_ACTION, typeOfArticles.recent)(dispatch, 0);
+        // how to fix this
+        
+
+        if(load){
             setResfreshing(false);
         }
 

@@ -22,7 +22,7 @@ function getFeaturedPostAction(type,feedtype) {
                }
            });
        }
-
+       return true;
     }
 }
 
